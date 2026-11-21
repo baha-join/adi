@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.db import transaction
 from django.db.models import F
 from .models import MenuDay, MenuItem, PickupSlot, Order, OrderItem, User
-from .serializers import MenuItemSerializer, PickupSlotSerializer, OrderSerializer
+from .serializers import MenuItemSerializer, PickupSlotSerializer, OrderSerializer, UserProfileSerializer
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -137,3 +137,45 @@ def api_register(request):
         
     user = User.objects.create_user(username=username, password=password)
     return Response({'status': 'ok', 'message': 'Пользователь создан'})
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def api_cart_remove(request, item_id):
+    cart = request.session.get('cart', {})
+    key = str(item_id)
+    if key in cart:
+        del cart[key]
+        request.session['cart'] = cart
+        return Response({'status': 'ok'})
+    return Response({'detail': 'Товар не найден в корзине'}, status=404)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def api_update_profile(request):
+    user = request.user
+    serializer = UserProfileSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'status': 'ok', 'profile': serializer.data})
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def api_cart_remove(request, item_id):
+    cart = request.session.get('cart', {})
+    key = str(item_id)
+    if key in cart:
+        del cart[key]
+        request.session['cart'] = cart
+        return Response({'status': 'ok'})
+    return Response({'detail': 'Товар не найден в корзине'}, status=404)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def api_update_profile(request):
+    user = request.user
+    serializer = UserProfileSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'status': 'ok', 'profile': serializer.data})
+    return Response(serializer.errors, status=400)

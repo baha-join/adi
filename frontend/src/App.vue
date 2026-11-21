@@ -19,7 +19,7 @@
       
       <div class="nav-auth">
         <template v-if="user">
-          <span class="user-info">{{ user.username }}</span>
+          <router-link to="/profile" class="user-info" style="text-decoration: none;">{{ user.username }}</router-link>
           <a href="#" @click.prevent="logout" class="logout-btn">Выйти</a>
         </template>
         <template v-else>

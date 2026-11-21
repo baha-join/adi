@@ -69,6 +69,7 @@ const loadData = async () => {
 }
 
 const removeItem = async (id) => {
+  try { await api.delete('/cart/remove/' + id + '/'); await loadData(); } catch(e) { alert('Ошибка'); }
   // Для удаления мы просто очищаем корзину (в упрощенной версии API нет отдельного метода удаления)
   await api.post('/cart/clear/')
   await loadData()
