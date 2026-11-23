@@ -1,0 +1,22 @@
+[
+{
+    "model": "someproject.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1500000$BUXApOxKUZOTKXXrnWWdDU$FQB4lLYfuanJ+FYZ6Rt10qKM5L++K/BYvLs+AWPUz+k=",
+        "last_login": "2026-11-23T05:14:22.157Z",
+        "is_superuser": true,
+        "username": "jaha",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-11-23T05:13:40.993Z",
+        "full_name": "",
+        "phone": "",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]
