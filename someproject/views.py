@@ -179,3 +179,15 @@ def api_update_profile(request):
         serializer.save()
         return Response({'status': 'ok', 'profile': serializer.data})
     return Response(serializer.errors, status=400)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def api_cancel_order(request, order_id):
+    order = Order.objects.filter(id=order_id, user=request.user).first()
+    if not order:
+        return Response({'detail': 'Заказ не найден'}, status=404)
+    if order.status != 'new':
+        return Response({'detail': 'Можно отменить только новый заказ'}, status=400)
+    order.status = 'cancelled'
+    order.save()
+    return Response({'status': 'ok'})

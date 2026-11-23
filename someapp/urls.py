@@ -29,3 +29,7 @@ urlpatterns += [
     path('api/staff/orders/', views.api_staff_orders),
     path('api/staff/orders/<int:order_id>/status/', views.api_staff_order_status),
 ]
+
+urlpatterns += [
+    path('api/orders/<int:order_id>/cancel/', views.api_cancel_order, name='api_cancel_order'),
+]

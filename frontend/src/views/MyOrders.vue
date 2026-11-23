@@ -21,6 +21,11 @@
           <span>Время выдачи: {{ order.slot ? order.slot.time_from + ' - ' + order.slot.time_to : 'Не указано' }}</span>
           <span class="order-total">Итого: {{ order.total_amount }} ₽</span>
         </div>
+        
+        <!-- Кнопка отмены для новых заказов -->
+        <div class="order-actions" v-if="order.status === 'new'">
+          <button @click="cancelOrder(order.id)" class="btn-cancel">Отменить заказ</button>
+        </div>
       </div>
     </div>
   </div>
@@ -32,13 +37,29 @@ import api from '../api'
 
 const orders = ref([])
 
-onMounted(async () => {
+const loadOrders = async () => {
   try {
     const res = await api.get('/orders/my/')
     orders.value = res.data
   } catch (e) {
     console.error("Ошибка загрузки заказов")
   }
+}
+
+const cancelOrder = async (id) => {
+  if (!confirm('Вы уверены, что хотите отменить заказ?')) return;
+  
+  try {
+    await api.patch(`/orders/${id}/cancel/`);
+    alert('Заказ отменен');
+    await loadOrders(); // Обновляем список
+  } catch (e) {
+    alert(e.response?.data?.detail || 'Ошибка при отмене');
+  }
+}
+
+onMounted(() => {
+  loadOrders()
 })
 </script>
 
@@ -57,4 +78,7 @@ onMounted(async () => {
 .order-body li { padding: 5px 0; color: #555; }
 .order-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 15px; font-size: 14px; color: #888; }
 .order-total { font-size: 20px; font-weight: bold; color: #ff7f50; }
+.order-actions { margin-top: 15px; text-align: right; }
+.btn-cancel { background-color: #dc3545; color: white; padding: 8px 15px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
+.btn-cancel:hover { background-color: #bd2130; }
 </style>
